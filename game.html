@@ -1,0 +1,309 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>MultiJohnen's Game Project</title>
+	</head>
+	<body>
+		<script src="libraries/Farris.js"></script>
+		<canvas id="canvas" width="512" height="480" style="border: 1px solid black;">
+			Your browser does not support HTML5 canvas. If you would like to view, please update your browser.
+		</canvas>
+		<script>
+			// Create the canvas
+			var canvas = document.getElementById("canvas");
+			var ctx = canvas.getContext('2d');
+			//canvas.width = document.body.clientWidth;
+			//canvas.height = document.body.clientHeight;
+			canvas.style.width = canvas.width + "px";
+			canvas.style.height = canvas.height + "px";
+			input.offset = new Vector2(GetLeft(canvas), GetTop(canvas));
+			
+			//Different score variables
+			var monstersCaught = 0;
+			var level = 1;
+			var setGameState = { 
+				LoadLevel: function () {
+					if (monstersCaught == 0)
+						startScreen();
+					else
+						mainGame();
+				}
+			}
+			
+			// Background image
+			var bgReady = false;
+			var bgImage = new Image();
+			bgImage.onload = function () {
+				bgReady = true;
+			};
+			bgImage.src = "background.png";
+			
+			// Hero image
+			var heroReady = false;
+			var heroImage = new Image();
+			heroImage.onload = function () {
+				heroReady = true;
+			};
+			heroImage.src = "hero.png";
+			
+			// Monster image
+			var monsterReady = false;
+			var monsterImage = new Image();
+			monsterImage.onload = function () {
+				monsterReady = true;
+			};
+			monsterImage.src = "monster.png";
+			
+			// Rock image
+			var rockReady = false;
+			var rockImage = new Image();
+			rockImage.onload = function () {
+				rockReady = true;
+			};
+			rockImage.src = "rock.png";
+			
+			// Trophy images
+			var trophyReady1 = false;
+			var trophyImage1 = new Image();
+			trophyImage1.onload = function () {
+				trophyReady1 = true;
+			};
+			trophyImage1.src = "bronze.png";
+			
+			var trophyReady2 = false;
+			var trophyImage2 = new Image();
+			trophyImage2.onload = function () {
+				trophyReady2 = true;
+			};
+			trophyImage2.src = "gold.png";
+			
+			var trophyReady3 = false;
+			var trophyImage3 = new Image();
+			trophyImage3.onload = function () {
+				trophyReady3 = true;
+			};
+			trophyImage3.src = "diamond.png";
+			
+			
+			// Game objects
+			var hero = new Rectangle(33, 350, 32, 32);
+			hero.color.g = 0;
+			hero.color.b = 0;
+			hero.color.a = 0;
+			
+			var monster = new Rectangle(447, 350, 32, 32);
+			monster.color = new Color(0, 255, 0, 0);
+			
+			var rock = new Rectangle(250, 250, 32, 32);
+			rock.color = new Color(0, 0, 255, 0);
+			
+			// Start Screen Level
+			var startScreen = function () {
+				
+				if (bgReady) {
+					ctx.drawImage(bgImage, 0, 0);
+				}
+
+				if (heroReady) {
+					ctx.drawImage(heroImage, hero.x, hero.y);
+				}
+
+				if (monsterReady) {
+					ctx.drawImage(monsterImage, monster.x, monster.y);
+				}
+				
+				monster.Draw(ctx);
+				hero.Draw(ctx);
+				
+			}
+			
+			// Main Game Level
+			var mainGame = function () {
+				
+				if (bgReady) {
+					ctx.drawImage(bgImage, 0, 0);
+				}
+				
+				if (rockReady) {
+					ctx.drawImage(rockImage, rock.x, rock.y);
+				}
+
+				if (heroReady) {
+					ctx.drawImage(heroImage, hero.x, hero.y);
+				}
+
+				if (monsterReady) {
+					ctx.drawImage(monsterImage, monster.x, monster.y);
+				}
+				
+				if ((trophyReady1) && (monstersCaught >= 10)) {
+					ctx.drawImage(trophyImage1, 415,32);
+				}
+				
+				if ((trophyReady2) && (monstersCaught >= 50)) {
+					ctx.drawImage(trophyImage2, 447,32);
+				}
+				
+				if ((trophyReady3) && (monstersCaught >= 100)) {
+					ctx.drawImage(trophyImage3, 479,32);
+				}
+				
+				monster.Draw(ctx);
+				rock.Draw(ctx);
+				hero.Draw(ctx);
+				
+				// Score
+				ctx.fillStyle = "rgb(250, 250, 250)";
+				ctx.font = "24px Helvetica";
+				ctx.textAlign = "left";
+				ctx.textBaseline = "top";
+				ctx.fillText("Goblins caught: " + monstersCaught, 2, 2);
+				
+				// Level
+				ctx.fillStyle = "rgb(250, 250, 250)";
+				ctx.font = "24px Helvetica";
+				ctx.textAlign = "left";
+				ctx.textBaseline = "top";
+				ctx.fillText("Level: " + level, 420, 2);
+				
+				// Achievement Text
+				if (monstersCaught == 10){
+					ctx.fillStyle = "rgb(250, 250, 250)";
+					ctx.font = "100px Helvetica";
+					ctx.textAlign = "center";
+					ctx.textBaseline = "bottom";
+					ctx.fillText("Noob!", canvas.width / 2, canvas.height / 2);
+				}
+				else if (monstersCaught == 50){
+					ctx.fillStyle = "rgb(250, 250, 250)";
+					ctx.font = "100px Helvetica";
+					ctx.textAlign = "center";
+					ctx.textBaseline = "bottom";
+					ctx.fillText("Challenger!", canvas.width / 2, canvas.height / 2);
+				}
+				else if (monstersCaught == 100){
+					ctx.fillStyle = "rgb(250, 250, 250)";
+					ctx.font = "100px Helvetica";
+					ctx.textAlign = "center";
+					ctx.textBaseline = "bottom";
+					ctx.fillText("Master!", canvas.width / 2, canvas.height / 2);
+				}
+			}
+			
+			// Reset the game when the player catches a monster
+			var reset = function () {
+				
+				// Change background after the prologue
+				if (monstersCaught == 1){
+					bgImage.src = "background1.png";
+				}
+				
+				// Level cosmetics change
+				if (monstersCaught == 10){
+					++level;
+					bgImage.src = "background2.png";
+					monsterImage.src = "monster2.png";
+					rockImage.src = "rock2.png";
+				}
+				else if (monstersCaught == 50){
+					++level;
+					bgImage.src = "background3.png";
+					monsterImage.src = "monster3.png";
+					rockImage.src = "rock3.png";
+				}
+				else if (monstersCaught == 100){
+					++level;
+					bgImage.src = "background4.png";
+					monsterImage.src = "monster4.png";
+					rockImage.src = "rock4.png";
+				}
+				
+				hero.x = canvas.width / 2;
+				hero.y = canvas.height / 2;
+
+				// Throw the monster somewhere on the screen randomly
+				monster.x = 32 + (Math.random() * (canvas.width - 128));
+				monster.y = 32 + (Math.random() * (canvas.height - 128));
+				
+				// Throw the rock somewhere on the screen randomly
+				rock.x = 32 + (Math.random() * (canvas.width - 128));
+				rock.y = 32 + (Math.random() * (canvas.height - 128));
+			};
+			
+			//Update your objects
+			var Update = setInterval(function(){
+				var previousPosition = new Vector2(hero.x, hero.y);
+				
+				//Movement
+				if (input.a)
+					hero.x -= 1.5;
+				if (input.d)
+					hero.x += 1.5;
+				if (input.s)
+					hero.y += 1.5;
+				if (input.w)
+					hero.y -= 1.5;
+				
+				// Collision with canvas
+				if (hero.x < 32)
+					hero.x = 32;
+				if (hero.y < 32)
+					hero.y = 32;
+				if (hero.x + 32 > canvas.width - 32)
+					hero.x = canvas.width - 64;
+				if (hero.y + 32 > canvas.height - 32)
+					hero.y = canvas.height - 64;
+					
+				//Collision with rock
+				if (hero.Intersects(rock)){
+					hero.x = previousPosition.x;
+					hero.y = previousPosition.y;
+				}
+				
+				// Are they touching(hero & monster)?
+				if (
+					hero.x <= (monster.x + 32)
+					&& monster.x <= (hero.x + 32)
+					&& hero.y <= (monster.y + 32)
+					&& monster.y <= (hero.y + 32)
+				) {
+					++monstersCaught;
+					reset();
+				}
+				
+				//Intersection checking
+				if (rock.Intersects(hero) || rock.Intersects(monster)){
+					reset();
+				}
+			}, 1);
+			
+			(function(){
+				var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+					window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+		
+				window.requestAnimationFrame = requestAnimationFrame;
+			})();
+			var requestId = 0;
+			
+			function Draw(){
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				setGameState.LoadLevel();			
+				//Loop
+				requestId = window.requestAnimationFrame(Draw);
+			}
+			
+			function Start(){
+				requestId = window.requestAnimationFrame(Draw);
+			}
+			
+			function Stop(){
+				if (requestId)
+					window.cancelAnimationFrame(requestId);
+				
+				requestId = 0;
+			}
+
+			Start();
+		</script>
+	</body>
+</html>
