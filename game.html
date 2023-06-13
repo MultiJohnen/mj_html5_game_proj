@@ -18,7 +18,10 @@
 			canvas.style.height = canvas.height + "px";
 			input.offset = new Vector2(GetLeft(canvas), GetTop(canvas));
 			
-			//Different score variables
+			// Hero speed
+			const heroSpeed = 256;  // movement in pixels per second
+
+			// Different score variables
 			var monstersCaught = 0;
 			var level = 1;
 			var setGameState = { 
@@ -84,7 +87,6 @@
 			};
 			trophyImage3.src = "diamond.png";
 			
-			
 			// Game objects
 			var hero = new Rectangle(33, 350, 32, 32);
 			hero.color.g = 0;
@@ -96,7 +98,7 @@
 			
 			var rock = new Rectangle(250, 250, 32, 32);
 			rock.color = new Color(0, 0, 255, 0);
-			
+
 			// Start Screen Level
 			var startScreen = function () {
 				
@@ -114,12 +116,10 @@
 				
 				monster.Draw(ctx);
 				hero.Draw(ctx);
-				
 			}
-			
+
 			// Main Game Level
 			var mainGame = function () {
-				
 				if (bgReady) {
 					ctx.drawImage(bgImage, 0, 0);
 				}
@@ -189,10 +189,9 @@
 					ctx.fillText("Master!", canvas.width / 2, canvas.height / 2);
 				}
 			}
-			
-			// Reset the game when the player catches a monster
+
+			/* Reset the game when the player catches a monster */
 			var reset = function () {
-				
 				// Change background after the prologue
 				if (monstersCaught == 1){
 					bgImage.src = "background1.png";
@@ -229,20 +228,22 @@
 				rock.x = 32 + (Math.random() * (canvas.width - 128));
 				rock.y = 32 + (Math.random() * (canvas.height - 128));
 			};
-			
-			//Update your objects
-			var Update = setInterval(function(){
+
+			// Update your objects
+			var update = function(modifier) {
 				var previousPosition = new Vector2(hero.x, hero.y);
 				
-				//Movement
-				if (input.a)
-					hero.x -= 1.5;
-				if (input.d)
-					hero.x += 1.5;
-				if (input.s)
-					hero.y += 1.5;
+				let velocity = heroSpeed * modifier;
+				
+				// Movement
 				if (input.w)
-					hero.y -= 1.5;
+					hero.y -= velocity;
+				if (input.a)
+					hero.x -= velocity;
+				if (input.s)
+					hero.y += velocity;
+				if (input.d)
+					hero.x += velocity;
 				
 				// Collision with canvas
 				if (hero.x < 32)
@@ -254,7 +255,7 @@
 				if (hero.y + 32 > canvas.height - 32)
 					hero.y = canvas.height - 64;
 					
-				//Collision with rock
+				// Collision with rock
 				if (hero.Intersects(rock)){
 					hero.x = previousPosition.x;
 					hero.y = previousPosition.y;
@@ -271,13 +272,24 @@
 					reset();
 				}
 				
-				//Intersection checking
+				// Intersection checking
 				if (rock.Intersects(hero) || rock.Intersects(monster)){
 					reset();
 				}
+			};
+
+			var then = Date.now();
+			// Calling update indefinitely
+			var Update = setInterval(function() {
+				var now = Date.now();
+				var delta = now - then;
+
+				update(delta / 1000);
+
+				then = now;
 			}, 1);
 			
-			(function(){
+			(function() {
 				var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
 					window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 		
@@ -285,18 +297,18 @@
 			})();
 			var requestId = 0;
 			
-			function Draw(){
+			function Draw() {
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
 				setGameState.LoadLevel();			
-				//Loop
+				// Loop
 				requestId = window.requestAnimationFrame(Draw);
 			}
 			
-			function Start(){
+			function Start() {
 				requestId = window.requestAnimationFrame(Draw);
 			}
 			
-			function Stop(){
+			function Stop() {
 				if (requestId)
 					window.cancelAnimationFrame(requestId);
 				
