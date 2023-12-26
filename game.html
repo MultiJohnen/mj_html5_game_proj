@@ -39,7 +39,7 @@
 			bgImage.onload = function () {
 				bgReady = true;
 			};
-			bgImage.src = "background.png";
+			bgImage.src = "assets/background.png";
 			
 			// Hero image
 			var heroReady = false;
@@ -47,7 +47,7 @@
 			heroImage.onload = function () {
 				heroReady = true;
 			};
-			heroImage.src = "hero.png";
+			heroImage.src = "assets/hero.png";
 			
 			// Monster image
 			var monsterReady = false;
@@ -55,7 +55,7 @@
 			monsterImage.onload = function () {
 				monsterReady = true;
 			};
-			monsterImage.src = "monster.png";
+			monsterImage.src = "assets/monster.png";
 			
 			// Rock image
 			var rockReady = false;
@@ -63,7 +63,7 @@
 			rockImage.onload = function () {
 				rockReady = true;
 			};
-			rockImage.src = "rock.png";
+			rockImage.src = "assets/rock.png";
 			
 			// Trophy images
 			var trophyReady1 = false;
@@ -71,21 +71,21 @@
 			trophyImage1.onload = function () {
 				trophyReady1 = true;
 			};
-			trophyImage1.src = "bronze.png";
+			trophyImage1.src = "assets/bronze.png";
 			
 			var trophyReady2 = false;
 			var trophyImage2 = new Image();
 			trophyImage2.onload = function () {
 				trophyReady2 = true;
 			};
-			trophyImage2.src = "gold.png";
+			trophyImage2.src = "assets/gold.png";
 			
 			var trophyReady3 = false;
 			var trophyImage3 = new Image();
 			trophyImage3.onload = function () {
 				trophyReady3 = true;
 			};
-			trophyImage3.src = "diamond.png";
+			trophyImage3.src = "assets/diamond.png";
 			
 			// Game objects
 			var hero = new Rectangle(33, 350, 32, 32);
@@ -194,27 +194,27 @@
 			var reset = function () {
 				// Change background after the prologue
 				if (monstersCaught == 1){
-					bgImage.src = "background1.png";
+					bgImage.src = "assets/background1.png";
 				}
 				
 				// Level cosmetics change
 				if (monstersCaught == 10){
 					++level;
-					bgImage.src = "background2.png";
-					monsterImage.src = "monster2.png";
-					rockImage.src = "rock2.png";
+					bgImage.src = "assets/background2.png";
+					monsterImage.src = "assets/monster2.png";
+					rockImage.src = "assets/rock2.png";
 				}
 				else if (monstersCaught == 50){
 					++level;
-					bgImage.src = "background3.png";
-					monsterImage.src = "monster3.png";
-					rockImage.src = "rock3.png";
+					bgImage.src = "assets/background3.png";
+					monsterImage.src = "assets/monster3.png";
+					rockImage.src = "assets/rock3.png";
 				}
 				else if (monstersCaught == 100){
 					++level;
-					bgImage.src = "background4.png";
-					monsterImage.src = "monster4.png";
-					rockImage.src = "rock4.png";
+					bgImage.src = "assets/background4.png";
+					monsterImage.src = "assets/monster4.png";
+					rockImage.src = "assets/rock4.png";
 				}
 				
 				hero.x = canvas.width / 2;
