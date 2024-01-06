@@ -5,6 +5,7 @@
 	</head>
 	<body>
 		<script src="libraries/Farris.js"></script>
+		<audio id="monsterImpactAudioEffect" src="assets/audio/impactsplat01.wav"></audio>
 		<canvas id="canvas" width="512" height="480" style="border: 1px solid black;">
 			Your browser does not support HTML5 canvas. If you would like to view, please update your browser.
 		</canvas>
@@ -56,6 +57,7 @@
 				monsterReady = true;
 			};
 			monsterImage.src = "assets/monster.png";
+			var monsterImpactAudioEffect = document.getElementById("monsterImpactAudioEffect");
 			
 			// Rock image
 			var rockReady = false;
@@ -99,9 +101,12 @@
 			var rock = new Rectangle(250, 250, 32, 32);
 			rock.color = new Color(0, 0, 255, 0);
 
+			/*
+			LEVELS
+			*/
+
 			// Start Screen Level
 			var startScreen = function () {
-				
 				if (bgReady) {
 					ctx.drawImage(bgImage, 0, 0);
 				}
@@ -190,6 +195,10 @@
 				}
 			}
 
+			/*
+			ENGINE
+			*/
+
 			/* Reset the game when the player catches a monster */
 			var reset = function () {
 				// Change background after the prologue
@@ -233,18 +242,35 @@
 			var update = function(modifier) {
 				var previousPosition = new Vector2(hero.x, hero.y);
 				
-				let velocity = heroSpeed * modifier;
+				let velocity = heroSpeed * modifier,
+					dirX = 0,
+					dirY = 0,
+					pressingUp = 0,
+					pressingLeft = 0,
+					pressingDown = 0,
+					pressingRight = 0;
 				
-				// Movement
+				// Determining the direction
 				if (input.w)
-					hero.y -= velocity;
+					pressingUp = 1;
 				if (input.a)
-					hero.x -= velocity;
+					pressingLeft = 1;
 				if (input.s)
-					hero.y += velocity;
+					pressingDown = 1;
 				if (input.d)
-					hero.x += velocity;
-				
+					pressingRight = 1;
+
+				dirX = -pressingLeft + pressingRight;
+				dirY = -pressingUp + pressingDown;
+
+				// Applying square root
+				if (dirX !== 0 && dirY !== 0) {
+					velocity *= Math.SQRT1_2;
+				}
+
+				hero.x += velocity * dirX;
+				hero.y += velocity * dirY;
+
 				// Collision with canvas
 				if (hero.x < 32)
 					hero.x = 32;
@@ -268,6 +294,9 @@
 					&& hero.y <= (monster.y + 32)
 					&& monster.y <= (hero.y + 32)
 				) {
+					monsterImpactAudioEffect.pause();
+					monsterImpactAudioEffect.load();
+					monsterImpactAudioEffect.play();
 					++monstersCaught;
 					reset();
 				}
@@ -314,6 +343,10 @@
 				
 				requestId = 0;
 			}
+
+			/*
+			RUN
+			*/
 
 			Start();
 		</script>
