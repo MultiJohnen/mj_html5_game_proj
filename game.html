@@ -2,13 +2,16 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>MultiJohnen's Game Project</title>
+		<link rel="stylesheet" href="game.css">
 	</head>
 	<body>
-		<script src="libraries/Farris.js"></script>
 		<audio id="monsterImpactAudioEffect" src="assets/audio/impactsplat01.wav"></audio>
-		<canvas id="canvas" width="512" height="480" style="border: 1px solid black;">
+
+		<canvas id="canvas" width="512" height="480">
 			Your browser does not support HTML5 canvas. If you would like to view, please update your browser.
 		</canvas>
+
+		<script src="libraries/Farris.js"></script>
 		<script>
 			// Create the canvas
 			var canvas = document.getElementById("canvas");
@@ -17,6 +20,11 @@
 			//canvas.height = document.body.clientHeight;
 			canvas.style.width = canvas.width + "px";
 			canvas.style.height = canvas.height + "px";
+
+			ctx.webkitImageSmoothingEnabled = false;
+			ctx.mozImageSmoothingEnabled = false;
+			ctx.imageSmoothingEnabled = false;
+
 			input.offset = new Vector2(GetLeft(canvas), GetTop(canvas));
 			
 			// Hero speed

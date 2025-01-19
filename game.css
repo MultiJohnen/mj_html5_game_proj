@@ -1,0 +1,62 @@
+@property --_sw {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 100vw; 
+}
+@property --_sh {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 100vh; 
+}
+:root {
+    --sw: tan(atan2(var(--_sw),1px)); /* screen width */
+    --sh: tan(atan2(var(--_sh),1px)); /* screen height*/
+    /* The result is an integer without unit  */
+}
+
+html,body {
+    margin: unset;
+    height:100%;
+    width:100%;
+}
+canvas {
+    position:absolute;
+    top:0; left:0; right:0; bottom:0;
+    margin:auto;
+
+    image-rendering: optimizeSpeed;             /* Older versions of FF */
+    image-rendering: -moz-crisp-edges;          /* FF 6.0+ */
+    image-rendering: -webkit-optimize-contrast; /* Webkit (non standard naming) */
+    image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
+    image-rendering: crisp-edges;               /* Possible future browsers. */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE (non standard naming) */
+}
+#canvas {
+    border: 1px solid black;
+    /* transform: matrix(
+        min(var(--sw) / 512, var(--sh) / 480), 0, 
+        0, min(var(--sw) / 512, var(--sh) / 480), 
+        calc((var(--sw) - 512 * min(var(--sw) / 512, var(--sh) / 480)) / 2), 
+        calc((var(--sh) - 480 * min(var(--sw) / 512, var(--sh) / 480)) / 2)
+    ); */
+    /* transform: matrix(
+        min(var(--sw) / 512, var(--sh) / 480), 0, 
+        0, min(var(--sw) / 512, var(--sh) / 480), 
+        0, 0
+    ); */
+    transform: scale(min(var(--sw) / 512, var(--sh) / 480));
+}
+
+/* Show the viewport dimensions */
+/* body:after {
+    content: counter(sw) "x" counter(sh);
+    counter-reset: sh var(--sh) sw var(--sw);
+    font-size: 50px;
+    font-family: system-ui,sans-serif;
+    font-weight: 900;
+    position: fixed;
+    inset: 0;
+    width: fit-content;
+    height: fit-content;
+    margin: auto;
+} */
